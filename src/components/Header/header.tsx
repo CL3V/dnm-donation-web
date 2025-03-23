@@ -2,126 +2,76 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { Moon, Sun, Menu } from "lucide-react";
-import { useTheme } from "next-themes";
-import { usePathname } from "next/navigation";
+import { Menu } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { DialogTitle } from "@/components/ui/dialog";
 import { Logo } from "@/components/Logo";
+import { useHeader } from "./hooks";
 
 export const Header = () => {
-    const { setTheme } = useTheme();
-    const [mounted, setMounted] = React.useState(false);
-    const pathname = usePathname();
-    const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
-
-    React.useEffect(() => {
-        setMounted(true);
-    }, []);
-
-    const navLinks = [
-        { href: "/", label: "Home" },
-        { href: "/topup", label: "Top-Up" },
-    ];
+    const {
+        navLinks,
+        pathname,
+        isDrawerOpen,
+        setIsDrawerOpen,
+        isVisible,
+        mounted,
+    } = useHeader();
 
     return (
-        <header className="fixed top-0 left-0 right-0 flex items-center justify-between p-3 md:pr-20 md:pl-20 text-white z-50">
-            <Logo />
-            <nav className="hidden md:flex items-center gap-6">
-                <ul className="flex items-center gap-6 text-md">
-                    {navLinks.map(({ href, label }) => (
-                        <li key={href}>
-                            <Link
-                                href={href}
-                                className={`relative transition-colors duration-200 font-semibold text-md ${
-                                    mounted && pathname === href
-                                        ? "text-blue-400 after:absolute after:left-0 after:bottom-[-5px] after:w-full after:h-[1px] after:bg-blue-400"
-                                        : "hover:text-blue-400 after:absolute after:left-0 after:bottom-[-5px] after:w-0 after:h-[1px] after:bg-blue-400 hover:after:w-full after:transition-all after:duration-300"
-                                }`}
-                            >
-                                {label}
-                            </Link>
-                        </li>
-                    ))}
-                </ul>
-                {/* <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="outline" size="icon">
-                            <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                            <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-                            <span className="sr-only">Toggle theme</span>
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => setTheme("light")}>
-                            Light
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => setTheme("dark")}>
-                            Dark
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => setTheme("system")}>
-                            System
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu> */}
-            </nav>
-            <div className="md:hidden">
-                <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
-                    <DrawerTrigger asChild>
-                        <Button variant="outline" size="icon">
-                            <Menu className="h-5 w-5" />
-                        </Button>
-                    </DrawerTrigger>
-                    <DrawerContent>
-                        <DialogTitle className="p-4 text-lg font-semibold">
-                            Menu
-                        </DialogTitle>
-                        <nav className="flex flex-col p-4 gap-4">
-                            {navLinks.map(({ href, label }) => (
+        <header
+            className={`fixed top-0 left-0 right-0 z-50 pr-5 pl-5 sm:pr-12 sm:pl-12 backdrop-blur-md md:backdrop-blur-none transition-transform duration-300 ${
+                isVisible ? "translate-y-0" : "-translate-y-full"
+            }`}
+        >
+            <div className="max-w-7xl mx-auto flex items-center justify-between py-4">
+                <Logo />
+                <nav className="hidden md:flex items-center gap-6">
+                    <ul className="flex items-center gap-6 text-md">
+                        {navLinks.map(({ href, label }) => (
+                            <li key={href}>
                                 <Link
-                                    key={href}
                                     href={href}
-                                    className="text-lg font-semibold"
-                                    onClick={() => setIsDrawerOpen(false)}
+                                    className={`relative transition-colors duration-200 font-semibold text-md ${
+                                        mounted && pathname === href
+                                            ? "text-blue-400 after:absolute after:left-0 after:bottom-[-5px] after:w-full after:h-[1px] after:bg-blue-400"
+                                            : "hover:text-blue-400 after:absolute after:left-0 after:bottom-[-5px] after:w-0 after:h-[1px] after:bg-blue-400 hover:after:w-full after:transition-all after:duration-300"
+                                    }`}
                                 >
                                     {label}
                                 </Link>
-                            ))}
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <Button variant="outline" size="icon">
-                                        <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                                        <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-                                    </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end">
-                                    <DropdownMenuItem
-                                        onClick={() => setTheme("light")}
+                            </li>
+                        ))}
+                    </ul>
+                </nav>
+                <div className="md:hidden">
+                    <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
+                        <DrawerTrigger asChild>
+                            <Button variant="outline" size="icon">
+                                <Menu className="h-5 w-5" />
+                            </Button>
+                        </DrawerTrigger>
+                        <DrawerContent className="flex items-center text-center">
+                            <DialogTitle className="p-4 text-lg font-semibold">
+                                Menu
+                            </DialogTitle>
+                            <nav className="flex flex-col p-4 gap-4">
+                                {navLinks.map(({ href, label }) => (
+                                    <Link
+                                        key={href}
+                                        href={href}
+                                        className="text-lg font-semibold"
+                                        onClick={() => setIsDrawerOpen(false)}
                                     >
-                                        Light
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem
-                                        onClick={() => setTheme("dark")}
-                                    >
-                                        Dark
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem
-                                        onClick={() => setTheme("system")}
-                                    >
-                                        System
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </nav>
-                    </DrawerContent>
-                </Drawer>
+                                        {label}
+                                    </Link>
+                                ))}
+                            </nav>
+                        </DrawerContent>
+                    </Drawer>
+                </div>
             </div>
         </header>
     );

@@ -1,36 +1,34 @@
 "use client";
 
 import { Suspense } from "react";
-import { useSearchParams } from "next/navigation";
+import Image from "next/image";
+
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
+import { usePayment } from "./hooks";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 
 function PaymentContent() {
-    const searchParams = useSearchParams();
-    const diamonds = searchParams.get("diamonds");
-    const price = searchParams.get("price");
-    const router = useRouter();
-
-    const [accountID, setAccountID] = useState("");
-    const [paymentMethod, setPaymentMethod] = useState("card");
-
-    const handleConfirmPayment = () => {
-        if (!accountID) {
-            alert("Please enter your Dragon Nest Mobile account ID.");
-            return;
-        }
-        alert(
-            `Payment of ${price} for ${diamonds} diamonds confirmed using ${paymentMethod}!`
-        );
-        router.push("/");
-    };
+    const {
+        diamonds,
+        price,
+        accountID,
+        paymentMethod,
+        setAccountID,
+        setPaymentMethod,
+        handleConfirmPayment,
+        navigateToDonate,
+    } = usePayment();
 
     return (
-        <section className="p-6 bg-gradient-to-b from-gray-900 to-black text-white min-h-screen flex flex-col items-center justify-center">
+        <section className="p-6 bg-gradient-to-b from-gray-900 to-black text-white min-h-screen flex flex-col items-center pt-30 md:justify-center md:pt-0">
             <Card className="p-8 bg-gray-800 border border-gray-700 shadow-lg max-w-md text-center">
                 <CardContent>
                     <h1 className="text-3xl font-bold text-yellow-400">
@@ -62,15 +60,23 @@ function PaymentContent() {
                         <label className="text-gray-300 text-sm">
                             Payment Method
                         </label>
-                        <select
-                            className="mt-2 w-full bg-gray-700 text-white border-gray-600 p-2 rounded-md"
+                        <Select
+                            onValueChange={setPaymentMethod}
                             value={paymentMethod}
-                            onChange={(e) => setPaymentMethod(e.target.value)}
                         >
-                            <option value="card">Credit/Debit Card</option>
-                            <option value="gcash">GCash</option>
-                            <option value="qr">Generate QR Code</option>
-                        </select>
+                            <SelectTrigger className="mt-2 w-full bg-gray-700 text-white border-gray-600">
+                                <SelectValue placeholder="Select a payment method" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="card">
+                                    Credit/Debit Card
+                                </SelectItem>
+                                <SelectItem value="gcash">GCash</SelectItem>
+                                <SelectItem value="qr">
+                                    Generate QR Code
+                                </SelectItem>
+                            </SelectContent>
+                        </Select>
                     </div>
 
                     {paymentMethod === "qr" && (
@@ -97,7 +103,7 @@ function PaymentContent() {
                     </Button>
                     <Button
                         className="mt-3 w-full bg-red-500 hover:bg-red-400 text-black font-semibold"
-                        onClick={() => router.push("/")}
+                        onClick={navigateToDonate}
                     >
                         Cancel
                     </Button>
