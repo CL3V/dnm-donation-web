@@ -34,7 +34,7 @@ export default function Landing() {
                         transition={{ duration: 1 }}
                         className="select-none text-5xl sm:text-6xl md:text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-blue-800"
                     >
-                        Welcome to Dragonest M Ascend
+                        Welcome to Dragon Nest Mobile:Ascend
                     </motion.p>
                     <p className="mt-4 text-md text-gray-200 w-full lg:w-2/3 md:w-2/3 text-center lg:text-left md:text-left pr-3 pl-3 md:p-0">
                         An immersive MMORPG where you forge your destiny. Battle
