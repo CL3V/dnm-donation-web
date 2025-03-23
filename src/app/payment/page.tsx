@@ -1,13 +1,15 @@
 "use client";
 
+import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
-export default function Payment() {
+function PaymentContent() {
     const searchParams = useSearchParams();
     const diamonds = searchParams.get("diamonds");
     const price = searchParams.get("price");
@@ -35,7 +37,7 @@ export default function Payment() {
                         Payment Confirmation
                     </h1>
                     <p className="mt-4 text-gray-300 text-lg">
-                        You're purchasing:
+                        You&apos;re purchasing:
                     </p>
                     <h2 className="text-2xl font-extrabold mt-2">
                         {diamonds} 💎
@@ -77,10 +79,11 @@ export default function Payment() {
                                 Scan this QR code to complete the payment.
                             </p>
                             <div className="mt-2 bg-white p-4 inline-block rounded-md">
-                                <img
+                                <Image
                                     src="/qr-placeholder.png"
                                     alt="QR Code"
-                                    className="w-32 h-32"
+                                    width={128}
+                                    height={128}
                                 />
                             </div>
                         </div>
@@ -101,5 +104,13 @@ export default function Payment() {
                 </CardContent>
             </Card>
         </section>
+    );
+}
+
+export default function Payment() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <PaymentContent />
+        </Suspense>
     );
 }

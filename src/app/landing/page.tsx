@@ -1,7 +1,5 @@
 "use client";
 
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
 import { FaDiscord, FaFacebook, FaTwitter, FaPlay } from "react-icons/fa";
 import { motion } from "framer-motion";
 
